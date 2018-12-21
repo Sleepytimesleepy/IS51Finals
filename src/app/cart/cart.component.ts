@@ -3,6 +3,17 @@ import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastService } from '../toast/toast.service';
+import { strictEqual } from 'assert';
+import { stringify } from '@angular/compiler/src/util';
+
+export interface IBike {
+  id: string;
+      image: string,
+      description: string;
+      price: number,
+      quantity: number;
+}
+
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -10,6 +21,7 @@ import { ToastService } from '../toast/toast.service';
 })
 export class CartComponent implements OnInit {
 
+  bikes: Array<IBike> = [];
   constructor(
     private http: Http,
     private activatedRoute: ActivatedRoute,
@@ -18,6 +30,46 @@ export class CartComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.bikes = [{
+      "id": 1,
+      "image": "../../assets/bike1.jpeg",
+      "description": "Bike Model 1",
+      "price": 5000,
+      "quantity": 1
+    },
+    {
+      "id": 2,
+      "image": "../../assets/bike2.jpeg",
+      "description": "Bike Model 2",
+      "price": 4000,
+      "quantity": 2
+    },
+    {
+      "id": 3,
+      "image": "../../assets/bike3.jpeg",
+      "description": "Bike Model 3",
+      "price": 3000,
+      "quantity": 3
+    }]
+  
   }
+
+addBike(){
+  const newBike:IBike = {
+    'id': null,
+      'image': null,
+      'description': null,
+      'price': null,
+      'quantity': null,
+  };
+  this.bikes.unshift(newBike);{
+    
+  }
+}
+
+deleteBike(index:number) {
+  this.bikes.splice(index, 1);
+}
+
 
 }
