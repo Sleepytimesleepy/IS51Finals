@@ -3,17 +3,13 @@ import { Http } from '@angular/http';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { ToastService } from '../toast/toast.service';
-import { strictEqual } from 'assert';
-import { stringify } from '@angular/compiler/src/util';
 
 export interface IBike {
-  id: string;
-      image: string,
-      description: string;
-      price: number,
-      quantity: number;
+  id?: number;
+  description: string;
+  price: number;
+  quantity: number;
 }
-
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
@@ -22,6 +18,7 @@ export interface IBike {
 export class CartComponent implements OnInit {
 
   bikes: Array<IBike> = [];
+  params: string;
   constructor(
     private http: Http,
     private activatedRoute: ActivatedRoute,
@@ -30,46 +27,56 @@ export class CartComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.bikes = [{
-      "id": 1,
-      "image": "../../assets/bike1.jpeg",
-      "description": "Bike Model 1",
-      "price": 5000,
-      "quantity": 1
-    },
-    {
-      "id": 2,
-      "image": "../../assets/bike2.jpeg",
-      "description": "Bike Model 2",
-      "price": 4000,
-      "quantity": 2
-    },
-    {
-      "id": 3,
-      "image": "../../assets/bike3.jpeg",
-      "description": "Bike Model 3",
-      "price": 3000,
-      "quantity": 3
-    }]
-  
+    this.bikes = await this.loadBikes();
   }
 
-addBike(){
-  const newBike:IBike = {
-    'id': null,
-      'image': null,
-      'description': null,
-      'price': null,
-      'quantity': null,
-  };
-  this.bikes.unshift(newBike);{
-    
+  async loadBikes() {
+    let bikes = JSON.parse(localStorage.getItem('bikes'));
+    if (bikes && bikes.length > 0) {
+    } else {
+      bikes = await this.loadBikesFromJson();
+    }
+    this.bikes = bikes;
+    return bikes;
   }
-}
 
-deleteBike(index:number) {
-  this.bikes.splice(index, 1);
-}
+  async loadBikesFromJson() {
+    const bikes = await this.http.get('assets/inventory.json').toPromise();
+    return bikes.json();
+  }
 
+  addBike1() {
+    const bike: IBike = {
+      id: null,
+      description: null,
+      price: null,
+      quantity: null,
+    };
+    this.bikes.unshift(bike);
 
+  }
+
+  addBike2() {
+    const bike: IBike = {
+      id: null,
+      description: null,
+      price: null,
+      quantity: null,
+    };
+    this.bikes.unshift(bike);
+  }
+
+  addBike3() {
+    const bike: IBike = {
+      id: null,
+      description: null,
+      price: null,
+      quantity: null,
+    };
+    this.bikes.unshift(bike);
+  }
+
+  deleteBike(index: number) {
+    this.bikes.splice(index, 1);
+  }
 }
